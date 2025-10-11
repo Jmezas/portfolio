@@ -4,6 +4,7 @@ import { useRef, useMemo, useState, useEffect, Suspense } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Float, Stars, Box, Text } from '@react-three/drei';
 import * as THREE from 'three';
+import { Vector3 } from 'three';
 
 // Detectar si es dispositivo móvil
 function isMobileDevice(): boolean {
@@ -39,10 +40,18 @@ function detectWebGLSupport(): boolean {
     return false;
   }
 }
+  
+type TechBoxProps = {
+  position: Vector3 | [number, number, number];
+  name: string;
+  color: string;
+  speed: number;
+  isMobile: boolean;
+};
 
-function TechBox({ position, name, color, speed, isMobile }: any) {
+function TechBox({ position, name, color, speed, isMobile }: TechBoxProps) {
   const meshRef = useRef<THREE.Mesh>(null);
-  const textRef = useRef<any>(null);
+  const textRef = useRef<typeof Text>(null);
 
   // Tamaños adaptativos para móvil
   const boxSize = isMobile ? 1.0 : 1.3;
@@ -55,7 +64,7 @@ function TechBox({ position, name, color, speed, isMobile }: any) {
       meshRef.current.rotation.y += 0.008;
     }
     if (textRef.current) {
-      textRef.current.quaternion.copy(state.camera.quaternion);
+      (textRef.current as unknown as THREE.Object3D).quaternion.copy(state.camera.quaternion);
     }
   });
 

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { ExternalLink, Github, Info } from 'lucide-react';
 import ProjectModal from './ProjectModal';
+import Image from 'next/image';
 
 interface ProjectCard3DProps {
   title: string;
@@ -75,10 +76,11 @@ export default function ProjectCard3D({
         {/* Imagen de fondo si existe */}
         {image && (
           <div className="relative w-full h-40 mb-6 rounded-xl overflow-hidden">
-            <img
+            <Image
               src={image}
               alt={title}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           </div>

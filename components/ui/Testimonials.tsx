@@ -118,7 +118,7 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
                 transition={{ delay: 0.2 }}
                 className="text-lg md:text-xl text-gray-800 dark:text-gray-200 text-center mb-8 leading-relaxed italic relative z-10"
               >
-                "{currentTestimonial.content}"
+                &quot;{currentTestimonial.content}&quot;
               </motion.p>
 
               {/* Author Info */}

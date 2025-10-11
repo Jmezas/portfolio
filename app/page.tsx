@@ -19,11 +19,11 @@ import {
   StaggerItem,
   staggerItemVariants,
   ScrollProgressBar,
-  SlideInOnScroll,
   FadeInOnScroll
 } from '@/components/ui/ScrollAnimations';
 import { downloadCV } from '@/lib/downloadCV';
 import { useState, useRef } from 'react';
+import Image from 'next/image';
 
 // Cargar el componente 3D de forma dinámica para evitar problemas de SSR
 const Hero3D = dynamic(() => import('@/components/3d/Hero3D'), {
@@ -35,13 +35,9 @@ export default function Home() {
   const [showAllSkills, setShowAllSkills] = useState(false);
   const [showAllExperiences, setShowAllExperiences] = useState(false);
   const [showAllProjects, setShowAllProjects] = useState(false);
-  const displayedSkills = showAllSkills ? skills : skills.slice(0, 3);
-  const displayedExperiences = showAllExperiences ? experiences : experiences.slice(0, 1);
   const projectsSectionRef = useRef<HTMLElement>(null);
   const skillsSectionRef = useRef<HTMLElement>(null);
   const experiencesSectionRef = useRef<HTMLElement>(null);
-
-  const displayedProjects = showAllProjects ? projects : projects.slice(0, 3);
 
   const handleToggleProjects = () => {
     if (showAllProjects) {
@@ -195,10 +191,11 @@ export default function Home() {
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: 'spring', stiffness: 300 }}
                 >
-                  <img
+                  <Image
                     src="/perfil.jpg"
                     alt="Jhaser Meza"
-                    className="w-full h-full object-cover"
+                    fill
+                    style={{ objectFit: 'cover' }}
                   />
                   {/* Overlay en hover */}
                   <motion.div

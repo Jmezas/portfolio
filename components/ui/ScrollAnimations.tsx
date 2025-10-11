@@ -138,7 +138,7 @@ export const staggerItemVariants = {
       stiffness: 100
     }
   }
-};
+} as const;
 
 interface ScrollProgressBarProps {
   color?: string;
