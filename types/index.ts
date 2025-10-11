@@ -23,6 +23,15 @@ export interface Project {
   image?: string;
   liveUrl?: string;
   githubUrl?: string;
+  fullDescription?: string;
+  challenges?: string[];
+  solutions?: string[];
+  impact?: {
+    metric: string;
+    value: string;
+  }[];
+  duration?: string;
+  team?: string;
 }
 
 export interface PersonalInfo {
@@ -34,4 +43,16 @@ export interface PersonalInfo {
   summary: string;
   linkedin?: string;
   github?: string;
+}
+
+export interface Testimonial {
+  id: string;
+  name: string;
+  position: string;
+  company: string;
+  image?: string;
+  content: string;
+  rating: number; // 1-5
+  date?: string;
+  relationship?: string; // e.g., "Trabajamos juntos en el mismo equipo"
 }

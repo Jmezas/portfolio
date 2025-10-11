@@ -3,14 +3,27 @@
 import { motion } from 'framer-motion';
 import { Mail, Phone, Github, Linkedin, Download, Sparkles, Code2, Rocket } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { personalInfo, experiences, skills, projects } from '@/lib/data';
+import { personalInfo, experiences, skills, projects, testimonials } from '@/lib/data';
 import SkillCard3D from '@/components/ui/SkillCard3D';
 import ExperienceCard from '@/components/ui/ExperienceCard';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import CustomCursor from '@/components/ui/CustomCursor';
 import SmoothScroll from '@/components/ui/SmoothScroll';
 import ProjectCard3D from '@/components/ui/ProjectCard3D';
-import { useState } from 'react';
+import Testimonials from '@/components/ui/Testimonials';
+import {
+  ScrollReveal,
+  ScrollScale,
+  ParallaxSection,
+  StaggerContainer,
+  StaggerItem,
+  staggerItemVariants,
+  ScrollProgressBar,
+  SlideInOnScroll,
+  FadeInOnScroll
+} from '@/components/ui/ScrollAnimations';
+import { downloadCV } from '@/lib/downloadCV';
+import { useState, useRef } from 'react';
 
 // Cargar el componente 3D de forma dinámica para evitar problemas de SSR
 const Hero3D = dynamic(() => import('@/components/3d/Hero3D'), {
@@ -24,11 +37,41 @@ export default function Home() {
   const [showAllProjects, setShowAllProjects] = useState(false);
   const displayedSkills = showAllSkills ? skills : skills.slice(0, 3);
   const displayedExperiences = showAllExperiences ? experiences : experiences.slice(0, 1);
+  const projectsSectionRef = useRef<HTMLElement>(null);
+  const skillsSectionRef = useRef<HTMLElement>(null);
+  const experiencesSectionRef = useRef<HTMLElement>(null);
 
   const displayedProjects = showAllProjects ? projects : projects.slice(0, 3);
 
+  const handleToggleProjects = () => {
+    if (showAllProjects) {
+      // Si se va a ocultar, hacer scroll a la sección de proyectos
+      projectsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    setShowAllProjects(!showAllProjects);
+  };
+
+  const handleToggleSkills = () => {
+    if (showAllSkills) {
+      // Si se va a ocultar, hacer scroll a la sección de skills
+      skillsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    setShowAllSkills(!showAllSkills);
+  };
+
+  const handleToggleExperiences = () => {
+    if (showAllExperiences) {
+      // Si se va a ocultar, hacer scroll a la sección de experiencias
+      experiencesSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    setShowAllExperiences(!showAllExperiences);
+  };
+
   return (
     <main className="min-h-screen w-full relative overflow-hidden">
+      {/* Scroll Progress Bar */}
+      <ScrollProgressBar color="indigo" />
+
       {/* Theme Toggle */}
       <ThemeToggle />
 
@@ -102,15 +145,15 @@ export default function Home() {
                 />
               </motion.a>
 
-              <motion.a
-                href="#experience"
+              <motion.button
+                onClick={downloadCV}
                 className="group relative px-8 py-4 bg-gray-800/80 hover:bg-gray-800 dark:bg-white/10 dark:hover:bg-white/20 text-white rounded-full font-semibold backdrop-blur-xl border-2 border-gray-700 dark:border-white/30 flex items-center gap-2 overflow-hidden"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <Download size={20} className="group-hover:rotate-12 transition-transform duration-300" />
-                <span>Ver CV</span>
-              </motion.a>
+                <span>Descargar CV</span>
+              </motion.button>
             </motion.div>
 
             <motion.div
@@ -211,22 +254,21 @@ export default function Home() {
       </section>
 
       {/* Journey Section */}
-      <section id="experience" className="relative py-16 md:py-24 px-2 sm:px-8 lg:px-12 overflow-hidden">
-        {/* Background */}
+      <section ref={experiencesSectionRef} id="experience" className="relative py-16 md:py-24 px-2 sm:px-8 lg:px-12 overflow-hidden">
+        {/* Background with Parallax */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-b from-gray-100 via-indigo-50 to-gray-100 dark:from-gray-900 dark:via-indigo-950/50 dark:to-gray-900" />
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/20 rounded-full blur-[50px]" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[50px]" />
+          <ParallaxSection speed={0.3}>
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/20 rounded-full blur-[50px]" />
+          </ParallaxSection>
+          <ParallaxSection speed={0.5}>
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[50px]" />
+          </ParallaxSection>
         </div>
 
         <div className="relative max-w-7xl mx-auto w-full">
           {/* Header */}
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <ScrollReveal direction="up" className="text-center mb-16">
             <motion.div
               className="inline-flex items-center gap-3 px-6 py-2.5 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-full backdrop-blur-xl border border-indigo-300 dark:border-white/30 mb-6"
               initial={{ scale: 0, rotate: -180 }}
@@ -262,53 +304,77 @@ export default function Home() {
             >
               {personalInfo.summary}
             </motion.p>
-          </motion.div>
+          </ScrollReveal>
 
-          {/* Timeline Stats */}
-          <motion.div
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-16"
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-          >
+          {/* Timeline Stats with Stagger Animation */}
+          <StaggerContainer staggerDelay={0.15} className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-16">
             {[
               { number: '7+', label: 'Años', color: 'from-indigo-500 to-indigo-600' },
               { number: '4', label: 'Empresas', color: 'from-purple-500 to-purple-600' },
               { number: '50+', label: 'Proyectos', color: 'from-pink-500 to-pink-600' },
               { number: '15+', label: 'Tecnologías', color: 'from-blue-500 to-blue-600' },
-            ].map((stat, index) => (
-              <motion.div
+            ].map((stat) => (
+              <StaggerItem
                 key={stat.label}
+                variants={staggerItemVariants}
                 className="relative group"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -10 }}
+                whileHover={{ y: -10, scale: 1.05 }}
+                transition={{ type: 'spring', stiffness: 300 }}
               >
                 <div className={`p-6 md:p-8 rounded-2xl bg-gradient-to-br ${stat.color} backdrop-blur-xl shadow-2xl`}>
                   <div className="text-3xl md:text-4xl font-black text-white mb-2">{stat.number}</div>
                   <div className="text-sm md:text-base text-white/90 font-medium">{stat.label}</div>
                 </div>
                 <div className={`absolute -inset-1 bg-gradient-to-r ${stat.color} rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity -z-10`} />
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+
+          {/* Journey Cards with alternating slide animations */}
+          <div className="space-y-16 md:space-y-20">
+            {/* Primera experiencia - sin animación de entrada */}
+            {experiences.slice(0, 1).map((exp, index) => (
+              <motion.div
+                key={exp.id}
+                initial={{ opacity: 1, x: 0 }}
+                className="opacity-100"
+              >
+                <ExperienceCard
+                  company={exp.company}
+                  position={exp.position}
+                  period={exp.period}
+                  location={exp.location}
+                  description={exp.description}
+                  technologies={exp.technologies}
+                  index={index}
+                />
               </motion.div>
             ))}
-          </motion.div>
 
-          {/* Journey Cards */}
-          <div className="space-y-16 md:space-y-20">
-            {displayedExperiences.map((exp, index) => (
-              <ExperienceCard
+            {/* Experiencias adicionales - con animación alternada */}
+            {showAllExperiences && experiences.slice(1).map((exp, index) => (
+              <motion.div
                 key={exp.id}
-                company={exp.company}
-                position={exp.position}
-                period={exp.period}
-                location={exp.location}
-                description={exp.description}
-                technologies={exp.technologies}
-                index={index}
-              />
+                initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                transition={{
+                  duration: 0.6,
+                  delay: index * 0.15,
+                  type: 'spring',
+                  stiffness: 100
+                }}
+              >
+                <ExperienceCard
+                  company={exp.company}
+                  position={exp.position}
+                  period={exp.period}
+                  location={exp.location}
+                  description={exp.description}
+                  technologies={exp.technologies}
+                  index={index + 1}
+                />
+              </motion.div>
             ))}
           </div>
 
@@ -322,7 +388,7 @@ export default function Home() {
               transition={{ delay: 0.3 }}
             >
               <motion.button
-                onClick={() => setShowAllExperiences(!showAllExperiences)}
+                onClick={handleToggleExperiences}
                 className="group relative px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full font-semibold flex items-center gap-2 overflow-hidden shadow-lg shadow-indigo-500/30"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -344,21 +410,20 @@ export default function Home() {
       </section>
 
       {/* Skills Section */}
-      <section id="skills" className="relative py-16 md:py-24 px-6 sm:px-8 lg:px-12 overflow-hidden">
-        {/* Background */}
+      <section ref={skillsSectionRef} id="skills" className="relative py-16 md:py-24 px-6 sm:px-8 lg:px-12 overflow-hidden">
+        {/* Background with Parallax */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-b from-gray-100 via-purple-50 to-gray-100 dark:from-gray-900 dark:via-purple-950/50 dark:to-gray-900" />
-          <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-purple-500/30 rounded-full blur-[120px]" />
-          <div className="absolute bottom-1/3 left-1/4 w-[500px] h-[500px] bg-pink-500/30 rounded-full blur-[120px]" />
+          <ParallaxSection speed={0.4}>
+            <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-purple-500/30 rounded-full blur-[120px]" />
+          </ParallaxSection>
+          <ParallaxSection speed={0.6}>
+            <div className="absolute bottom-1/3 left-1/4 w-[500px] h-[500px] bg-pink-500/30 rounded-full blur-[120px]" />
+          </ParallaxSection>
         </div>
 
         <div className="relative max-w-7xl mx-auto w-full">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <ScrollReveal direction="up" className="text-center mb-16">
             <motion.div
               className="inline-flex items-center gap-3 px-6 py-2.5 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full backdrop-blur-xl border border-purple-300 dark:border-white/30 mb-6"
               initial={{ scale: 0, rotate: 180 }}
@@ -395,17 +460,45 @@ export default function Home() {
             >
               Tecnologías modernas para soluciones excepcionales
             </motion.p>
-          </motion.div>
+          </ScrollReveal>
 
-          {/* Vista de todas las skills en grid */}
+          {/* Skills Grid - Primeros 3 siempre visibles sin animación */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {displayedSkills.map((skill, index) => (
-              <SkillCard3D
+            {/* Primeros 3 skills - sin animación de entrada */}
+            {skills.slice(0, 3).map((skill, index) => (
+              <motion.div
                 key={skill.name}
-                name={skill.name}
-                level={skill.level}
-                index={index}
-              />
+                initial={{ opacity: 1, y: 0 }}
+                className="opacity-100"
+              >
+                <SkillCard3D
+                  name={skill.name}
+                  level={skill.level}
+                  index={index}
+                />
+              </motion.div>
+            ))}
+
+            {/* Skills adicionales - con animación stagger */}
+            {showAllSkills && skills.slice(3).map((skill, index) => (
+              <motion.div
+                key={skill.name}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{
+                  duration: 0.6,
+                  delay: index * 0.1,
+                  type: 'spring',
+                  stiffness: 100
+                }}
+              >
+                <SkillCard3D
+                  name={skill.name}
+                  level={skill.level}
+                  index={index + 3}
+                />
+              </motion.div>
             ))}
           </div>
 
@@ -419,7 +512,7 @@ export default function Home() {
               transition={{ delay: 0.3 }}
             >
               <motion.button
-                onClick={() => setShowAllSkills(!showAllSkills)}
+                onClick={handleToggleSkills}
                 className="group relative px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold flex items-center gap-2 overflow-hidden shadow-lg shadow-purple-500/30"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -442,21 +535,20 @@ export default function Home() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="relative py-16 md:py-24 px-6 sm:px-8 lg:px-12 overflow-hidden">
-        {/* Background */}
+      <section ref={projectsSectionRef} id="projects" className="relative py-16 md:py-24 px-6 sm:px-8 lg:px-12 overflow-hidden">
+        {/* Background with Parallax */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-b from-gray-100 via-pink-50 to-gray-100 dark:from-gray-900 dark:via-pink-950/50 dark:to-gray-900" />
-          <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-pink-500/30 rounded-full blur-[120px]" />
-          <div className="absolute bottom-1/4 right-1/3 w-[500px] h-[500px] bg-indigo-500/30 rounded-full blur-[120px]" />
+          <ParallaxSection speed={0.35}>
+            <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-pink-500/30 rounded-full blur-[120px]" />
+          </ParallaxSection>
+          <ParallaxSection speed={0.55}>
+            <div className="absolute bottom-1/4 right-1/3 w-[500px] h-[500px] bg-indigo-500/30 rounded-full blur-[120px]" />
+          </ParallaxSection>
         </div>
 
         <div className="relative max-w-7xl mx-auto w-full">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <ScrollReveal direction="up" className="text-center mb-16">
             <motion.div
               className="inline-flex items-center gap-3 px-6 py-2.5 bg-gradient-to-r from-pink-500/20 to-indigo-500/20 rounded-full backdrop-blur-xl border border-pink-300 dark:border-white/30 mb-6"
               initial={{ scale: 0, rotate: -180 }}
@@ -493,20 +585,63 @@ export default function Home() {
             >
               Soluciones innovadoras que transforman ideas en realidad
             </motion.p>
-          </motion.div>
+          </ScrollReveal>
 
-          {/* Projects Grid */}
+          {/* Projects Grid - Primeros 3 siempre visibles sin animación */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {displayedProjects.map((project, index) => (
-              <ProjectCard3D
+            {/* Primeros 3 proyectos - sin animación de entrada */}
+            {projects.slice(0, 3).map((project, index) => (
+              <motion.div
                 key={project.title}
-                title={project.title}
-                description={project.description}
-                technologies={project.technologies}
-                liveUrl={project.liveUrl}
-                githubUrl={project.githubUrl}
-                index={index}
-              />
+                initial={{ opacity: 1, y: 0 }}
+                className="opacity-100"
+              >
+                <ProjectCard3D
+                  title={project.title}
+                  description={project.description}
+                  technologies={project.technologies}
+                  liveUrl={project.liveUrl}
+                  githubUrl={project.githubUrl}
+                  index={index}
+                  fullDescription={project.fullDescription}
+                  challenges={project.challenges}
+                  solutions={project.solutions}
+                  impact={project.impact}
+                  duration={project.duration}
+                  team={project.team}
+                />
+              </motion.div>
+            ))}
+
+            {/* Proyectos adicionales - con animación stagger */}
+            {showAllProjects && projects.slice(3).map((project, index) => (
+              <motion.div
+                key={project.title}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{
+                  duration: 0.6,
+                  delay: index * 0.15,
+                  type: 'spring',
+                  stiffness: 100
+                }}
+              >
+                <ProjectCard3D
+                  title={project.title}
+                  description={project.description}
+                  technologies={project.technologies}
+                  liveUrl={project.liveUrl}
+                  githubUrl={project.githubUrl}
+                  index={index + 3}
+                  fullDescription={project.fullDescription}
+                  challenges={project.challenges}
+                  solutions={project.solutions}
+                  impact={project.impact}
+                  duration={project.duration}
+                  team={project.team}
+                />
+              </motion.div>
             ))}
           </div>
 
@@ -520,7 +655,7 @@ export default function Home() {
               transition={{ delay: 0.3 }}
             >
               <motion.button
-                onClick={() => setShowAllProjects(!showAllProjects)}
+                onClick={handleToggleProjects}
                 className="group relative px-8 py-4 bg-gradient-to-r from-pink-600 to-indigo-600 text-white rounded-full font-semibold flex items-center gap-2 overflow-hidden shadow-lg shadow-pink-500/30"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -541,24 +676,90 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Testimonials Section */}
+      <section id="testimonials" className="relative py-16 md:py-24 px-6 sm:px-8 lg:px-12 overflow-hidden">
+        {/* Background with Parallax */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-100 via-green-50 to-gray-100 dark:from-gray-900 dark:via-green-950/50 dark:to-gray-900" />
+          <ParallaxSection speed={0.4}>
+            <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-green-500/30 rounded-full blur-[120px]" />
+          </ParallaxSection>
+          <ParallaxSection speed={0.6}>
+            <div className="absolute bottom-1/3 right-1/4 w-[500px] h-[500px] bg-emerald-500/30 rounded-full blur-[120px]" />
+          </ParallaxSection>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto w-full">
+          <ScrollReveal direction="up" className="text-center mb-16">
+            <motion.div
+              className="inline-flex items-center gap-3 px-6 py-2.5 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-full backdrop-blur-xl border border-green-300 dark:border-white/30 mb-6"
+              initial={{ scale: 0, rotate: 180 }}
+              whileInView={{ scale: 1, rotate: 0 }}
+              viewport={{ once: true }}
+              transition={{ type: 'spring', stiffness: 200 }}
+            >
+              <Sparkles className="text-green-600 dark:text-green-400" size={18} />
+              <span className="text-green-700 dark:text-green-300 font-bold text-sm">Testimonios</span>
+            </motion.div>
+
+            <motion.h2
+              className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight px-4"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-green-700 to-emerald-700 dark:from-white dark:via-green-200 dark:to-emerald-300">
+                Lo Que Dicen
+              </span>
+              <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 dark:from-green-400 dark:via-emerald-400 dark:to-teal-400">
+                De Mi Trabajo
+              </span>
+            </motion.h2>
+
+            <motion.p
+              className="text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed px-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+            >
+              Opiniones de clientes, colegas y líderes que han trabajado conmigo
+            </motion.p>
+          </ScrollReveal>
+
+          {/* Testimonials Carousel */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5, duration: 0.6 }}
+          >
+            <Testimonials testimonials={testimonials} />
+          </motion.div>
+        </div>
+      </section>
+
       {/* Contact Section */}
       <section id="contact" className="relative py-16 md:py-20 px-3 sm:px-4 lg:px-12 overflow-hidden flex items-center">
-        {/* Background Effects */}
+        {/* Background Effects with Parallax */}
         <div className="absolute inset-0 bg-gradient-to-b from-gray-100 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-indigo-950 dark:to-purple-950" />
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-[600px] h-[600px] bg-indigo-500/30 rounded-full blur-[120px] animate-pulse" />
-          <div className="absolute bottom-20 right-10 w-[600px] h-[600px] bg-purple-500/30 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-pink-500/20 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
+          <ParallaxSection speed={0.2}>
+            <div className="absolute top-20 left-10 w-[600px] h-[600px] bg-indigo-500/30 rounded-full blur-[120px] animate-pulse" />
+          </ParallaxSection>
+          <ParallaxSection speed={0.4}>
+            <div className="absolute bottom-20 right-10 w-[600px] h-[600px] bg-purple-500/30 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
+          </ParallaxSection>
+          <ParallaxSection speed={0.3}>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-pink-500/20 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
+          </ParallaxSection>
         </div>
 
         <div className="relative max-w-7xl mx-auto w-full">
           {/* Header */}
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <ScrollReveal direction="up" className="text-center mb-12">
             <motion.div
               className="inline-flex items-center gap-3 px-5 py-2 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-full backdrop-blur-xl border border-indigo-300 dark:border-white/30 mb-6"
               initial={{ scale: 0, rotate: -180 }}
@@ -595,18 +796,12 @@ export default function Home() {
             >
               Transformemos tus ideas en realidad
             </motion.p>
-          </motion.div>
+          </ScrollReveal>
 
-          {/* Contact Methods */}
+          {/* Contact Methods with Scale Animation */}
           <div className="grid lg:grid-cols-2 gap-6 md:gap-8 mb-12">
             {/* Email Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2, type: 'spring', stiffness: 100 }}
-              className="group relative"
-            >
+            <ScrollScale delay={0.2} className="group relative">
               <motion.a
                 href={`mailto:${personalInfo.email}`}
                 className="block relative p-6 md:p-8 rounded-2xl bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-500/10 dark:to-purple-500/10 backdrop-blur-2xl border-2 border-indigo-300 dark:border-indigo-500/30 overflow-hidden"
@@ -651,16 +846,10 @@ export default function Home() {
                 {/* Glow effect */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 -z-10" />
               </motion.a>
-            </motion.div>
+            </ScrollScale>
 
             {/* Phone Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3, type: 'spring', stiffness: 100 }}
-              className="group relative"
-            >
+            <ScrollScale delay={0.3} className="group relative">
               <motion.a
                 href={`tel:+51 ${personalInfo.phone}`}
                 className="block relative p-6 md:p-8 rounded-2xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-500/10 dark:to-pink-500/10 backdrop-blur-2xl border-2 border-purple-300 dark:border-purple-500/30 overflow-hidden"
@@ -705,17 +894,11 @@ export default function Home() {
                 {/* Glow effect */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-purple-500 to-pink-600 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 -z-10" />
               </motion.a>
-            </motion.div>
+            </ScrollScale>
           </div>
 
-          {/* Social Links */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
-            className="text-center mb-12"
-          >
+          {/* Social Links with Fade In */}
+          <FadeInOnScroll delay={0.4} className="text-center mb-12">
             <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 font-medium px-6 leading-relaxed">También puedes encontrarme en</p>
             <div className="flex justify-center gap-6 flex-wrap">
               {personalInfo.github && (
@@ -760,16 +943,10 @@ export default function Home() {
                 </div>
               </motion.a>
             </div>
-          </motion.div>
+          </FadeInOnScroll>
 
-          {/* CTA Button */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
-            className="text-center"
-          >
+          {/* CTA Button with Scale */}
+          <ScrollScale delay={0.5} className="text-center">
             <motion.a
               href={`https://wa.me/51${personalInfo.phone}`}
               className="group relative inline-block"
@@ -815,9 +992,9 @@ export default function Home() {
             >
               Respondo en menos de 24 horas ⚡
             </motion.p>
-          </motion.div>
+          </ScrollScale>
         </div>
-      </section> 
+      </section>
     </main>
   );
 }

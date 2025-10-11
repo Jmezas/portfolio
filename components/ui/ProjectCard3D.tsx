@@ -2,7 +2,8 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { ExternalLink, Github } from 'lucide-react';
+import { ExternalLink, Github, Info } from 'lucide-react';
+import ProjectModal from './ProjectModal';
 
 interface ProjectCard3DProps {
   title: string;
@@ -12,6 +13,12 @@ interface ProjectCard3DProps {
   liveUrl?: string;
   githubUrl?: string;
   index: number;
+  fullDescription?: string;
+  challenges?: string[];
+  solutions?: string[];
+  impact?: { metric: string; value: string }[];
+  duration?: string;
+  team?: string;
 }
 
 export default function ProjectCard3D({
@@ -22,9 +29,16 @@ export default function ProjectCard3D({
   liveUrl,
   githubUrl,
   index,
+  fullDescription,
+  challenges,
+  solutions,
+  impact,
+  duration,
+  team,
 }: ProjectCard3DProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -34,29 +48,30 @@ export default function ProjectCard3D({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1, duration: 0.5 }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      onMouseMove={handleMouseMove}
-      className="relative group"
-      style={{
-        perspective: '1000px',
-      }}
-    >
+    <>
       <motion.div
-        className="relative p-6 md:p-8 rounded-2xl bg-gradient-to-br from-white/90 to-white/80 dark:from-white/10 dark:to-white/5 backdrop-blur-xl border border-gray-300 dark:border-white/20 overflow-hidden h-full flex flex-col"
-        animate={{
-          scale: isHovered ? 1.02 : 1,
-        }}
-        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: index * 0.1, duration: 0.5 }}
+        onHoverStart={() => setIsHovered(true)}
+        onHoverEnd={() => setIsHovered(false)}
+        onMouseMove={handleMouseMove}
+        className="relative group"
         style={{
-          transformStyle: 'preserve-3d',
+          perspective: '1000px',
         }}
       >
+        <motion.div
+          className="relative p-6 md:p-8 rounded-2xl bg-gradient-to-br from-white/90 to-white/80 dark:from-white/10 dark:to-white/5 backdrop-blur-xl border border-gray-300 dark:border-white/20 overflow-hidden h-full flex flex-col"
+          animate={{
+            scale: isHovered ? 1.02 : 1,
+          }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          style={{
+            transformStyle: 'preserve-3d',
+          }}
+        >
         {/* Imagen de fondo si existe */}
         {image && (
           <div className="relative w-full h-40 mb-6 rounded-xl overflow-hidden">
@@ -116,17 +131,26 @@ export default function ProjectCard3D({
 
           {/* Links */}
           <div className="flex gap-3 flex-wrap">
+            <motion.button
+              onClick={() => setIsModalOpen(true)}
+              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold text-sm"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Info size={16} />
+              <span>Ver Más</span>
+            </motion.button>
             {liveUrl && (
               <motion.a
                 href={liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold text-sm"
+                className="flex items-center gap-2 px-4 py-2.5 bg-gray-200 hover:bg-gray-300 dark:bg-white/10 dark:hover:bg-white/20 text-gray-900 dark:text-white rounded-lg font-semibold border border-gray-400 dark:border-white/20 text-sm"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <ExternalLink size={16} />
-                <span>Ver Demo</span>
+                <span>Demo</span>
               </motion.a>
             )}
             {githubUrl && (
@@ -151,5 +175,25 @@ export default function ProjectCard3D({
         </div>
       </motion.div>
     </motion.div>
+
+    {/* Modal - Fuera de la tarjeta para renderizado correcto */}
+    <ProjectModal
+      isOpen={isModalOpen}
+      onClose={() => setIsModalOpen(false)}
+      project={{
+        title,
+        description,
+        technologies,
+        liveUrl,
+        githubUrl,
+        fullDescription,
+        challenges,
+        solutions,
+        impact,
+        duration,
+        team,
+      }}
+    />
+  </>
   );
 }
