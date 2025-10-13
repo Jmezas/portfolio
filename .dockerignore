@@ -1,0 +1,52 @@
+# Dependencies
+node_modules
+
+# Next.js build output
+.next
+out
+
+# Vercel
+.vercel
+
+# TypeScript cache
+*.tsbuildinfo
+next-env.d.ts
+
+# Git
+.git
+.gitignore
+.github
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Testing
+coverage
+__tests__
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Docker files
+Dockerfile*
+.dockerignore
+docker-compose*.yml
+
+# Documentation
+README.md
+*.md
+DEPLOY.md
+OPTIMIZATION.md
+
+# Scripts
+*.sh
+
+# Misc
+.DS_Store
+*.pem
+*.log

@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio Jhaser
 
-## Getting Started
+Este proyecto es un portafolio personal desarrollado con el objetivo de mostrar habilidades, proyectos y experiencia profesional.
 
-First, run the development server:
+## Tecnologías utilizadas
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- React
+- Vite
+- JavaScript (ES6+)
+- CSS/SCSS
+- [Agregar otras tecnologías relevantes]
+
+## Instalación
+
+1. Clona el repositorio:
+    ```bash
+    git clone https://github.com/tu-usuario/portfolio-jhaser.git
+    cd portfolio-jhaser
+    ```
+2. Instala las dependencias:
+    ```bash
+    npm install
+    ```
+3. Inicia el servidor de desarrollo:
+    ```bash
+    npm run dev
+    ```
+
+## Estructura del proyecto
+
+```
+/src
+  /components      # Componentes reutilizables
+  /assets          # Imágenes y recursos estáticos
+  /pages           # Páginas principales del portafolio
+  App.jsx          # Componente principal
+  main.jsx         # Punto de entrada
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Despliegue
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Puedes desplegar este portafolio en plataformas como Vercel, Netlify o GitHub Pages.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Personalización
 
-## Learn More
+- Modifica los archivos en `/src/pages` para actualizar la información personal y proyectos.
+- Cambia los estilos en `/src/assets` o `/src/styles`.
 
-To learn more about Next.js, take a look at the following resources:
+## Licencia
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+[MIT](LICENSE)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Desarrollado por Jhaser.
