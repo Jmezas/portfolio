@@ -3,162 +3,346 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 17, 24, 39;
-  --background-end-rgb: 0, 0, 0;
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
+  --bg: #f6f4ef;
+  --elev: #fdfcf9;
+  --fg: #191816;
+  --muted: #6b675f;
+  --line: #e1dcd2;
+  --accent: var(--accent-light, #b4421a);
+  --accent-fg: #ffffff;
+  color-scheme: light;
 }
 
-:root:not(.dark) {
-  --foreground-rgb: 17, 24, 39;
-  --background-start-rgb: 243, 244, 246;
-  --background-end-rgb: 255, 255, 255;
-  --glass-bg: rgba(0, 0, 0, 0.05);
-  --glass-border: rgba(0, 0, 0, 0.1);
+.dark {
+  --bg: #121110;
+  --elev: #1a1917;
+  --fg: #ebe7df;
+  --muted: #9b968c;
+  --line: #2b2925;
+  --accent: var(--accent-dark, #f0894f);
+  --accent-fg: #121110;
+  color-scheme: dark;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-feature-settings: 'ss01', 'cv11';
+    text-rendering: optimizeLegibility;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Grano sutil, da textura de papel y evita el look "plano" de plantilla. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.045;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .dark body::before {
+    opacity: 0.07;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
 
-html {
-  scroll-behavior: smooth;
+@layer components {
+  .container-narrow {
+    @apply mx-auto w-full max-w-5xl px-5 sm:px-8;
+  }
+
+  .eyebrow {
+    @apply font-mono text-xs uppercase tracking-[0.18em] text-muted;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-full border border-line px-2.5 py-0.5 font-mono text-[11px] leading-5 text-muted;
+  }
+
+  .link-underline {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    text-decoration-color: var(--line);
+    transition: text-decoration-color 0.2s ease, color 0.2s ease;
+  }
+
+  .link-underline:hover {
+    text-decoration-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .header-surface {
+    background-color: var(--bg);
+    background-color: color-mix(in srgb, var(--bg) 82%, transparent);
+  }
+
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .dash-list > li {
+    @apply relative pl-5;
+  }
+
+  .dash-list > li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.75em;
+    width: 0.75rem;
+    height: 1px;
+    background-color: var(--accent);
+  }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-  overflow-x: hidden;
-  margin: 0;
-  padding: 0;
-  width: 100%;
+/* ---------- Fondo decorativo del hero ---------- */
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  --mx: -9999px;
+  --my: -9999px;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
+.dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--line) 1.3px, transparent 1.3px);
+  background-size: 26px 26px;
+  background-position: 13px 13px;
+  mask-image: radial-gradient(ellipse 80% 75% at 55% 35%, #000 20%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 75% at 55% 35%, #000 20%, transparent 80%);
 }
 
-::-webkit-scrollbar-track {
-  background: #1a1a2e;
+.dots-spot {
+  background-image: radial-gradient(var(--accent) 1.6px, transparent 1.6px);
+  mask-image: radial-gradient(240px circle at var(--mx) var(--my), #000 0%, transparent 70%);
+  -webkit-mask-image: radial-gradient(240px circle at var(--mx) var(--my), #000 0%, transparent 70%);
+  transition: opacity 0.4s ease;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #4F46E5;
-  border-radius: 5px;
+.aurora {
+  position: absolute;
+  width: 55vmax;
+  height: 55vmax;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.22;
+  background: var(--accent);
+  animation: drift 28s ease-in-out infinite alternate;
+  will-change: transform;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #6366F1;
+.aurora-a {
+  top: -25vmax;
+  right: -10vmax;
 }
 
-/* Animaciones personalizadas */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
+.aurora-b {
+  bottom: -30vmax;
+  left: -15vmax;
+  opacity: 0.16;
+  background: color-mix(in srgb, var(--accent) 45%, #5b7cff);
+  animation-duration: 36s;
+  animation-direction: alternate-reverse;
+}
+
+.dark .aurora {
+  opacity: 0.18;
+}
+
+.dark .aurora-b {
+  opacity: 0.14;
+}
+
+@keyframes drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
-    transform: translateY(-20px);
+    transform: translate3d(-8vw, 6vh, 0) scale(1.08);
+  }
+  100% {
+    transform: translate3d(5vw, -5vh, 0) scale(0.96);
   }
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
+/* ---------- Cinta de tecnologías ---------- */
+
+.marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
 
-/* Glassmorphism effect */
-.glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-}
-
-.glass-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.glass-hover:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 12px 48px 0 rgba(99, 102, 241, 0.5);
-  transform: translateY(-4px);
-}
-
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(135deg, #4F46E5, #7C3AED, #EC4899);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  background-size: 200% 200%;
-  animation: gradient-shift 3s ease infinite;
-}
-
-@keyframes gradient-shift {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-/* Efectos de brillo */
-.glow {
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.5),
-              0 0 40px rgba(99, 102, 241, 0.3),
-              0 0 60px rgba(99, 102, 241, 0.1);
-}
-
-.glow-hover {
-  transition: box-shadow 0.3s ease;
-}
-
-.glow-hover:hover {
-  box-shadow: 0 0 30px rgba(99, 102, 241, 0.7),
-              0 0 60px rgba(99, 102, 241, 0.5),
-              0 0 90px rgba(99, 102, 241, 0.3);
-}
-
-/* Selection color */
-::selection {
-  background-color: #4F46E5;
-  color: white;
-}
-
-/* Loading spinner para el componente 3D */
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin-slow {
-  animation: spin 3s linear infinite;
-}
-
-/* Asegurar centrado global */
-section {
+.marquee-track {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
+  width: max-content;
+  animation: marquee 60s linear infinite;
 }
 
-/* Fix para max-w containers */
-.max-w-2xl {
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem 0.75rem 0.85rem 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.marquee-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- Foto tipo polaroid ---------- */
+
+.polaroid {
+  background: var(--elev);
+  border: 1px solid var(--line);
+  padding: 0.6rem 0.6rem 0.9rem;
+  border-radius: 6px;
+  box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.35);
+  transform: rotate(-2.5deg);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease;
+}
+
+.polaroid:hover {
+  transform: rotate(0deg) translateY(-4px);
+  box-shadow: 0 28px 50px -20px rgb(0 0 0 / 0.4);
+}
+
+.polaroid img {
+  border-radius: 3px;
+}
+
+/* ---------- Subrayado a mano ---------- */
+
+.scribble {
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  bottom: -0.08em;
+  width: 104%;
+  height: 0.22em;
+  color: var(--accent);
+  overflow: visible;
+}
+
+.scribble path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: scribble-draw 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
+}
+
+@keyframes scribble-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ---------- Imagen de proyecto ---------- */
+
+.project-image {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.project-image img {
   width: 100%;
-  max-width: 80rem;
-  margin-left: auto;
-  margin-right: auto;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  transform: scale(1.01);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+article:hover .project-image img {
+  transform: scale(1.04);
+}
+
+/* ---------- Ficha del hero ---------- */
+
+.hero-card {
+  background: var(--elev);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.35);
+  transform: rotate(1.5deg);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-card:hover {
+  transform: rotate(0deg) translateY(-3px);
+}
+
+.cursor-blink {
+  color: var(--accent);
+  animation: blink 1.1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
 }
