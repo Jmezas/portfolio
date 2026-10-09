@@ -35,7 +35,7 @@ export default function ProjectCard({ project, labels, a11y }: ProjectCardProps)
 
   return (
     <>
-      <article className="flex w-full flex-col overflow-hidden rounded-xl border border-line bg-elev transition-colors hover:border-accent">
+      <article className="project-card flex w-full flex-col overflow-hidden rounded-xl border border-line bg-elev hover:border-accent">
         {project.image && (
           <div className="project-image">
             <Image

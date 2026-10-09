@@ -26,6 +26,14 @@ export const es: Labels = {
     title: 'Ahora',
     updated: 'Actualizado',
   },
+  robot: {
+    hello: 'Hola, soy el bot de {name}. Tócame.',
+    years: '{n}+ años escribiendo software que sigue en producción.',
+    companies: 'Ha trabajado en {n} empresas distintas.',
+    projects: '{n} proyectos publicados aquí abajo.',
+    cta: '¿Tienes un proyecto? Dale a "Escríbeme".',
+    label: 'Robot asistente, haz clic para otra frase',
+  },
   card: {
     title: 'perfil',
     years: 'experiencia',
@@ -105,6 +113,14 @@ export const en: Labels = {
   now: {
     title: 'Now',
     updated: 'Updated',
+  },
+  robot: {
+    hello: "Hi, I'm {name}'s bot. Tap me.",
+    years: '{n}+ years writing software that is still in production.',
+    companies: 'Has worked at {n} different companies.',
+    projects: '{n} projects published below.',
+    cta: 'Got a project? Hit "Get in touch".',
+    label: 'Assistant robot, click for another line',
   },
   card: {
     title: 'profile',

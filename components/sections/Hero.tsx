@@ -5,6 +5,7 @@ import { cvFileName, formatCoordinates, yearsOfExperience } from '@/lib/format';
 import Backdrop from '@/components/ui/Backdrop';
 import ExternalLink from '@/components/ui/ExternalLink';
 import HeroCard from '@/components/ui/HeroCard';
+import Robot from '@/components/ui/Robot';
 import Marquee from '@/components/ui/Marquee';
 import Reveal from '@/components/ui/Reveal';
 import Scribble from '@/components/ui/Scribble';
@@ -16,6 +17,15 @@ export default function Hero({ site }: { site: SiteConfig }) {
   const lastWord = words.pop();
   const underline = theme.underline !== false && Boolean(lastWord);
   const aside = theme.heroAside ?? (person.avatar ? 'photo' : 'card');
+  const companies = new Set(site.experience.map((job) => job.company)).size;
+  const robotMessages = [
+    labels.robot.hello.replace('{name}', person.shortName ?? person.name),
+    years > 0 ? labels.robot.years.replace('{n}', String(years)) : null,
+    companies > 1 ? labels.robot.companies.replace('{n}', String(companies)) : null,
+    site.projects.length > 0 ? labels.robot.projects.replace('{n}', String(site.projects.length)) : null,
+    ...(theme.robotMessages ?? []),
+    labels.robot.cta,
+  ].filter((message): message is string => Boolean(message));
   const marqueeItems =
     theme.marquee === false
       ? []
@@ -78,18 +88,18 @@ export default function Hero({ site }: { site: SiteConfig }) {
               <div className="mt-9 flex flex-wrap items-center gap-3">
                 <a
                   href={`mailto:${person.email}`}
-                  className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-accent-fg transition-opacity hover:opacity-90"
+                  className="btn-press inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-accent-fg hover:opacity-90"
                 >
-                  <Mail size={16} strokeWidth={1.75} aria-hidden />
+                  <Mail size={16} strokeWidth={1.75} aria-hidden className="wiggle-icon" />
                   {labels.hero.contact}
                 </a>
                 {person.cvFile && (
                   <a
                     href={person.cvFile}
                     download={cvFileName(site)}
-                    className="inline-flex items-center gap-2 rounded-full border border-line bg-elev px-5 py-2.5 text-sm font-medium transition-colors hover:border-accent hover:text-accent"
+                    className="btn-press inline-flex items-center gap-2 rounded-full border border-line bg-elev px-5 py-2.5 text-sm font-medium hover:border-accent hover:text-accent"
                   >
-                    <ArrowDownToLine size={16} strokeWidth={1.75} aria-hidden />
+                    <ArrowDownToLine size={16} strokeWidth={1.75} aria-hidden className="wiggle-icon" />
                     {labels.hero.downloadCV}
                   </a>
                 )}
@@ -108,6 +118,12 @@ export default function Hero({ site }: { site: SiteConfig }) {
               </div>
             </Reveal>
           </div>
+
+          {aside === 'robot' && (
+            <Reveal delay={0.1} className="flex justify-center md:justify-end">
+              <Robot messages={robotMessages} label={labels.robot.label} />
+            </Reveal>
+          )}
 
           {aside === 'card' && (
             <Reveal delay={0.1}>

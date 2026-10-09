@@ -160,10 +160,13 @@ export interface Theme {
    * Qué mostrar a la derecha del hero.
    * - "photo": la foto (`person.avatar`) estilo polaroid.
    * - "card": ficha con datos calculados (años, empresas, proyectos, tecnologías, hora local).
+   * - "robot": mascota animada que sigue el cursor, parpadea, saluda y habla.
    * - "none": nada.
    * Por defecto "photo" si hay avatar, si no "card".
    */
-  heroAside?: 'photo' | 'card' | 'none';
+  heroAside?: 'photo' | 'card' | 'robot' | 'none';
+  /** Frases extra para el robot. Se suman a las automáticas (años, empresas, proyectos). */
+  robotMessages?: string[];
 }
 
 export interface Labels {
@@ -188,6 +191,17 @@ export interface Labels {
   now: {
     title: string;
     updated: string;
+  };
+  robot: {
+    /** {name} se reemplaza por el nombre corto. */
+    hello: string;
+    /** {n} se reemplaza por el número. */
+    years: string;
+    companies: string;
+    projects: string;
+    cta: string;
+    /** Texto accesible del botón que es el robot. */
+    label: string;
   };
   card: {
     title: string;

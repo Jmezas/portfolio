@@ -37,7 +37,8 @@ export const site: SiteConfig = {
     backdrop: 'both',
     marquee: true,
     underline: true,
-    heroAside: 'card',
+    heroAside: 'robot',
+    robotMessages: ['Café, Docker y PostgreSQL. En ese orden.', 'Lima, GMT-5. Casi siempre en línea.'],
   },
 
   person: {

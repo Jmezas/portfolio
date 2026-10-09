@@ -54,7 +54,7 @@ export default function Header({ name, items, labels, clock }: HeaderProps) {
 
         <nav aria-label="Principal" className="hidden items-center gap-7 md:flex">
           {items.map((item) => (
-            <a key={item.href} href={item.href} className="text-sm text-muted transition-colors hover:text-fg">
+            <a key={item.href} href={item.href} className="nav-link text-sm text-muted transition-colors hover:text-fg">
               {item.label}
             </a>
           ))}
