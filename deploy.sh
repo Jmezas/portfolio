@@ -1,67 +1,61 @@
 #!/bin/bash
+set -euo pipefail
 
-# Script de despliegue manual para servidor Linux
-# Este script debe ejecutarse en el servidor de producción
-# Uso: ./deploy.sh [tag]
-
-set -e
-
-# Variables de configuración
-AWS_REGION="us-east-1"
-ECR_REGISTRY="196728492488.dkr.ecr.us-east-1.amazonaws.com"
+# --- VARIABLES VPS ---
+SERVER_IP="161.132.41.56"
+SERVER_USER="root"
 IMAGE_NAME="portfolio-jhaser"
-IMAGE_TAG="${1:-latest}"
 CONTAINER_NAME="portfolio-jhaser"
-PORT="3000"
+NETWORK="erp-network"
+REMOTE="$SERVER_USER@$SERVER_IP"
 
-echo "=========================================="
-echo "Desplegando Portfolio Jhaser"
-echo "=========================================="
-echo "Imagen: $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG"
-echo "Puerto: $PORT"
-echo "=========================================="
+# Colores
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
 
-# 1. Autenticarse en AWS ECR
-echo "🔐 Autenticando en AWS ECR..."
-aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+# 1. COMPILACION
+echo -e "${YELLOW}1. [LOCAL] Construyendo imagen para Linux/AMD64...${NC}"
+docker build --platform linux/amd64 -t "$IMAGE_NAME:latest" .
 
-# 2. Detener y eliminar contenedor existente si existe
-echo "🛑 Deteniendo contenedor existente (si existe)..."
-docker stop $CONTAINER_NAME 2>/dev/null || true
-docker rm $CONTAINER_NAME 2>/dev/null || true
+# 2. TRANSFERENCIA (antes de tocar el contenedor actual: sigue sirviendo mientras sube)
+echo -e "${YELLOW}2. [RED] Enviando al VPS (Gzip pipe)...${NC}"
+docker save "$IMAGE_NAME:latest" | gzip | ssh "$REMOTE" 'gunzip | docker load'
 
-# 3. Descargar la última imagen
-echo "⬇️  Descargando imagen desde ECR..."
-docker pull $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+# 3. REEMPLAZO DEL CONTENEDOR
+echo -e "${RED}3. [VPS] Reemplazando contenedor...${NC}"
+ssh "$REMOTE" bash -s <<EOF
+    set -e
+    echo "   -> Borrando contenedor $CONTAINER_NAME..."
+    docker rm -f "$CONTAINER_NAME" 2>/dev/null || true
 
-# 4. Ejecutar el nuevo contenedor
-echo "🚀 Iniciando nuevo contenedor..."
+    echo "   -> Iniciando nuevo contenedor..."
+    docker run -d \
+      --name "$CONTAINER_NAME" \
+      --network "$NETWORK" \
+      -e TZ=America/Lima \
+      --restart unless-stopped \
+      "$IMAGE_NAME:latest"
+EOF
 
-docker run -d --name $CONTAINER_NAME --network app-network --restart unless-stopped $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+# 4. VERIFICACION
+echo -e "${GREEN}4. [VPS] Verificando estado...${NC}"
+ssh "$REMOTE" bash -s <<EOF
+    sleep 3
+    if [ "\$(docker inspect -f '{{.State.Running}}' "$CONTAINER_NAME" 2>/dev/null)" != "true" ]; then
+      echo "   -> ERROR: el contenedor no esta corriendo. Ultimos logs:"
+      docker logs --tail 50 "$CONTAINER_NAME" || true
+      exit 1
+    fi
+    echo "   -> Contenedor corriendo."
 
-# 5. Verificar que el contenedor esté corriendo
-echo "🔍 Verificando estado del contenedor..."
-sleep 3
-if docker ps | grep -q $CONTAINER_NAME; then
-  echo "=========================================="
-  echo "✅ Despliegue exitoso!"
-  echo "=========================================="
-  echo "Contenedor: $CONTAINER_NAME"
-  echo "Puerto: $PORT"
-  echo "Estado: Corriendo"
-  echo "=========================================="
-  echo ""
-  echo "Ver logs: docker logs -f $CONTAINER_NAME"
-else
-  echo "❌ Error: El contenedor no está corriendo"
-  echo "Ver logs: docker logs $CONTAINER_NAME"
-  exit 1
-fi
+    echo "   -> Refrescando Nginx Proxy..."
+    docker restart nginx-ssl || echo "Nginx no se reinicio (existe el contenedor?)"
+EOF
 
-# 6. Limpiar imágenes antiguas
-echo "🧹 Limpiando imágenes antiguas..."
-docker image prune -f
+# 5. LIMPIEZA DE IMAGENES DANGLING
+echo -e "${YELLOW}5. [VPS] Limpiando imágenes antiguas...${NC}"
+ssh "$REMOTE" 'docker image prune -f'
 
-echo "=========================================="
-echo "Despliegue completado"
-echo "=========================================="
+echo -e "${GREEN}DESPLIEGUE DE FRONTEND COMPLETADO.${NC}"
