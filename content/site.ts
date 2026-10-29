@@ -342,6 +342,16 @@ export const site: SiteConfig = {
       },
     },
     {
+      id: 'aracne-3',
+      title: 'Aracne 3',
+      client: 'Aracne Report',
+      description:
+        'Aplicación de gestión de campañas comerciales, publicada en Google Play.',
+      stack: ['Android', 'Google Play'],
+      url: 'https://play.google.com/store/apps/details?id=com.aracnereport.aracne3',
+      image: '/projects/aracne-3.jpg',
+    },
+    {
       id: 'encuesta-campo-limpio',
       title: 'Encuesta PUA · Campo Limpio',
       client: 'Programa Campo Limpio',
