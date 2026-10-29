@@ -7,7 +7,7 @@ export default function Education({ site, number }: { site: SiteConfig; number: 
   const { labels } = site;
 
   return (
-    <section id="education" className="container-narrow scroll-mt-20 py-16 md:py-24">
+    <section id="education" className="container-narrow scroll-mt-20 py-12 md:py-24">
       <SectionHeading number={number} title={labels.education.title} />
 
       <div className="grid gap-12 md:grid-cols-2">

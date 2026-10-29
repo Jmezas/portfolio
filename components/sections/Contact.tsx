@@ -7,7 +7,7 @@ export default function Contact({ site, number }: { site: SiteConfig; number: st
   const { labels, person } = site;
 
   return (
-    <section id="contact" className="container-narrow scroll-mt-20 py-16 md:py-28">
+    <section id="contact" className="container-narrow scroll-mt-20 py-12 md:py-28">
       <Reveal className="border-t border-line pt-6">
         <span className="eyebrow">{number}</span>
       </Reveal>

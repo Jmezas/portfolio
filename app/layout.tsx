@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react';
 import { Inter, Instrument_Serif, JetBrains_Mono } from 'next/font/google';
 import { site } from '@/content/site';
 import { buildMetadata, personJsonLd } from '@/lib/seo';
+import PwaRegister from '@/components/ui/PwaRegister';
 import './globals.css';
 
 const sans = Inter({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
@@ -24,6 +25,7 @@ export const viewport: Viewport = {
   ],
   width: 'device-width',
   initialScale: 1,
+  viewportFit: 'cover',
 };
 
 /* Aplica el tema guardado antes del primer render para evitar el parpadeo. */
@@ -46,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${sans.variable} ${serif.variable} ${mono.variable} font-sans antialiased`}>
         {children}
+        <PwaRegister labels={site.labels.pwa} />
       </body>
     </html>
   );

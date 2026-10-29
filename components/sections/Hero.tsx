@@ -35,8 +35,8 @@ export default function Hero({ site }: { site: SiteConfig }) {
     <section id="top" className="relative">
       <Backdrop variant={theme.backdrop} />
 
-      <div className="container-narrow pb-20 pt-14 md:pb-28 md:pt-24">
-        <div className="grid gap-12 md:grid-cols-[minmax(0,1fr)_260px] md:items-center lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="container-narrow pb-12 pt-8 md:pb-28 md:pt-24">
+        <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_260px] md:items-center lg:grid-cols-[minmax(0,1fr)_320px]">
           <div>
             <Reveal>
               <p className="eyebrow flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -56,7 +56,7 @@ export default function Hero({ site }: { site: SiteConfig }) {
             </Reveal>
 
             <Reveal delay={0.05}>
-              <h1 className="mt-6 font-serif text-5xl leading-[0.98] tracking-tight sm:text-6xl md:text-7xl">
+              <h1 className="mt-5 break-words font-serif text-[2.75rem] leading-[0.98] tracking-tight sm:text-6xl md:text-7xl">
                 {underline ? (
                   <>
                     {words.join(' ')}{' '}
@@ -154,7 +154,9 @@ export default function Hero({ site }: { site: SiteConfig }) {
         </div>
       </div>
 
-      <Marquee items={marqueeItems} />
+      <div className="hidden md:block">
+        <Marquee items={marqueeItems} />
+      </div>
     </section>
   );
 }

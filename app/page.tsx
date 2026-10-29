@@ -1,6 +1,7 @@
 import { site } from '@/content/site';
 import { visibleSections } from '@/lib/format';
 import Header from '@/components/layout/Header';
+import MobileNav from '@/components/layout/MobileNav';
 import Footer from '@/components/layout/Footer';
 import Hero from '@/components/sections/Hero';
 import Now from '@/components/sections/Now';
@@ -14,6 +15,14 @@ import Contact from '@/components/sections/Contact';
 export default function Home() {
   const sections = visibleSections(site);
   const navItems = sections.map((key) => ({ href: `#${key}`, label: site.labels.nav[key] }));
+  const tabKeys = (['top', 'experience', 'projects', 'contact'] as const).filter(
+    (key) => key === 'top' || sections.includes(key),
+  );
+  const tabItems = tabKeys.map((key) => ({
+    key,
+    href: key === 'top' ? '#top' : `#${key}`,
+    label: key === 'top' ? site.labels.nav.home : site.labels.nav[key],
+  }));
   const index = (key: (typeof sections)[number]) =>
     String(sections.indexOf(key) + 1).padStart(2, '0');
 
@@ -37,7 +46,7 @@ export default function Home() {
         }
       />
 
-      <main id="main">
+      <main id="main" className="pb-[calc(3.75rem+env(safe-area-inset-bottom))] md:pb-0">
         <Hero site={site} />
         {site.now && site.now.items.length > 0 && <Now site={site} number={index('now')} />}
         {site.experience.length > 0 && <Experience site={site} number={index('experience')} />}
@@ -51,6 +60,7 @@ export default function Home() {
       </main>
 
       <Footer site={site} />
+      <MobileNav items={tabItems} />
     </>
   );
 }

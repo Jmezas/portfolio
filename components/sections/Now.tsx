@@ -7,7 +7,7 @@ export default function Now({ site, number }: { site: SiteConfig; number: string
   if (!site.now) return null;
 
   return (
-    <section id="now" className="container-narrow scroll-mt-20 py-16 md:py-20">
+    <section id="now" className="container-narrow scroll-mt-20 py-12 md:py-20">
       <Reveal className="grid gap-6 border-t border-line pt-6 md:grid-cols-[180px_minmax(0,1fr)] md:gap-x-10 lg:grid-cols-[220px_minmax(0,1fr)]">
         <div>
           <div className="flex items-baseline gap-4">

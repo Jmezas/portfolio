@@ -171,6 +171,7 @@ export interface Theme {
 
 export interface Labels {
   nav: {
+    home: string;
     now: string;
     experience: string;
     projects: string;
@@ -216,6 +217,12 @@ export interface Labels {
     title: string;
     present: string;
     stack: string;
+    /** Móvil: botón que despliega los logros de un puesto. */
+    showHighlights: string;
+    hideHighlights: string;
+    /** Móvil: botón para ver los puestos anteriores. {n} = cuántos faltan. */
+    showMore: string;
+    showLess: string;
   };
   projects: {
     title: string;
@@ -228,6 +235,9 @@ export interface Labels {
     role: string;
     highlights: string;
     stack: string;
+    /** Móvil: botón para ver el resto de proyectos. {n} = cuántos faltan. */
+    showMore: string;
+    showLess: string;
   };
   skills: {
     title: string;
@@ -252,6 +262,18 @@ export interface Labels {
   footer: {
     rights: string;
     backToTop: string;
+  };
+  pwa: {
+    /** Texto del aviso de instalación, por ejemplo "Instala el portafolio en tu pantalla de inicio". */
+    installHint: string;
+    install: string;
+    dismiss: string;
+    offlineTitle: string;
+    offlineText: string;
+    retry: string;
+    backToTop: string;
+    /** Aviso breve antes de recargar con la versión nueva. */
+    updating: string;
   };
   a11y: {
     toggleTheme: string;

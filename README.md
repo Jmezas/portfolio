@@ -76,6 +76,13 @@ lib/                 Etiquetas por idioma, formato de fechas y SEO
 types/               Interfaces TypeScript del contenido
 ```
 
+## PWA y actualización automática
+
+- `app/manifest.ts` genera el manifiesto desde `content/site.ts`; `app/icon.tsx` y `app/apple-icon.tsx` crean los iconos con tus iniciales y color de acento.
+- `app/sw.js/route.ts` sirve el service worker con el identificador del build dentro. Páginas con red primero y respaldo en caché; estáticos con caché primero. Sin red se muestra lo último visto o `app/offline/page.tsx`.
+- `components/ui/PwaRegister.tsx` registra el service worker, consulta `/version` cada minuto y al volver a la pestaña. Si hay un build nuevo, muestra un aviso y recarga sola. También ofrece "Instalar" cuando el navegador lo permite y el botón de volver arriba.
+- Cada `npm run build` genera un identificador nuevo (`next.config.ts`). Para fijarlo, define `BUILD_ID` al compilar.
+
 ## Scripts
 
 ```bash

@@ -7,6 +7,7 @@ import type { Labels } from '@/types';
 
 export const es: Labels = {
   nav: {
+    home: 'Inicio',
     now: 'Ahora',
     experience: 'Experiencia',
     projects: 'Proyectos',
@@ -47,6 +48,10 @@ export const es: Labels = {
     title: 'Experiencia',
     present: 'Actualidad',
     stack: 'Tecnologías',
+    showHighlights: 'Ver logros',
+    hideHighlights: 'Ocultar logros',
+    showMore: 'Ver experiencia anterior ({n})',
+    showLess: 'Ver menos',
   },
   projects: {
     title: 'Proyectos',
@@ -59,6 +64,8 @@ export const es: Labels = {
     role: 'Mi rol',
     highlights: 'Puntos clave',
     stack: 'Tecnologías',
+    showMore: 'Ver todos los proyectos ({n} más)',
+    showLess: 'Ver menos',
   },
   skills: {
     title: 'Habilidades',
@@ -84,6 +91,16 @@ export const es: Labels = {
     rights: 'Todos los derechos reservados.',
     backToTop: 'Volver arriba',
   },
+  pwa: {
+    installHint: 'Instala el portafolio en tu pantalla de inicio para abrirlo como una app.',
+    install: 'Instalar',
+    dismiss: 'Ahora no',
+    offlineTitle: 'Sin conexión',
+    offlineText: 'No hay internet en este momento. Lo último que viste sigue disponible; vuelve a intentarlo cuando recuperes la señal.',
+    retry: 'Reintentar',
+    backToTop: 'Volver arriba',
+    updating: 'Hay una versión nueva. Actualizando…',
+  },
   a11y: {
     toggleTheme: 'Cambiar tema',
     openMenu: 'Abrir menú',
@@ -95,6 +112,7 @@ export const es: Labels = {
 
 export const en: Labels = {
   nav: {
+    home: 'Home',
     now: 'Now',
     experience: 'Experience',
     projects: 'Projects',
@@ -135,6 +153,10 @@ export const en: Labels = {
     title: 'Experience',
     present: 'Present',
     stack: 'Stack',
+    showHighlights: 'Show highlights',
+    hideHighlights: 'Hide highlights',
+    showMore: 'Show earlier roles ({n})',
+    showLess: 'Show less',
   },
   projects: {
     title: 'Projects',
@@ -147,6 +169,8 @@ export const en: Labels = {
     role: 'My role',
     highlights: 'Highlights',
     stack: 'Stack',
+    showMore: 'Show all projects ({n} more)',
+    showLess: 'Show less',
   },
   skills: {
     title: 'Skills',
@@ -171,6 +195,16 @@ export const en: Labels = {
   footer: {
     rights: 'All rights reserved.',
     backToTop: 'Back to top',
+  },
+  pwa: {
+    installHint: 'Add this portfolio to your home screen to open it like an app.',
+    install: 'Install',
+    dismiss: 'Not now',
+    offlineTitle: 'You are offline',
+    offlineText: 'There is no internet connection right now. What you already saw is still available; try again when you are back online.',
+    retry: 'Retry',
+    backToTop: 'Back to top',
+    updating: 'New version available. Updating…',
   },
   a11y: {
     toggleTheme: 'Toggle theme',

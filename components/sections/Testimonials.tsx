@@ -6,7 +6,7 @@ export default function Testimonials({ site, number }: { site: SiteConfig; numbe
   const { labels } = site;
 
   return (
-    <section id="testimonials" className="container-narrow scroll-mt-20 py-16 md:py-24">
+    <section id="testimonials" className="container-narrow scroll-mt-20 py-12 md:py-24">
       <SectionHeading number={number} title={labels.testimonials.title} />
 
       <ul className="grid gap-5 md:grid-cols-2">

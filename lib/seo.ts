@@ -32,6 +32,13 @@ export function buildMetadata(site: SiteConfig): Metadata {
       description: site.meta.description,
     },
     robots: { index: true, follow: true },
+    manifest: '/manifest.webmanifest',
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: 'default',
+      title: site.person.shortName ?? site.person.name,
+    },
+    formatDetection: { telephone: true, email: true },
   };
 }
 

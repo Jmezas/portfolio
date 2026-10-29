@@ -62,26 +62,31 @@ export default function ProjectCard({ project, labels, a11y }: ProjectCardProps)
             </div>
           </div>
         )}
-        <div className="flex flex-1 flex-col p-6 md:p-7">
+        <div className="flex flex-1 flex-col p-5 md:p-7">
         <header className="flex items-start justify-between gap-4">
           <div>
-            <h3 className="font-serif text-2xl leading-tight tracking-tight">{project.title}</h3>
+            <h3 className="font-serif text-[1.375rem] leading-tight tracking-tight md:text-2xl">{project.title}</h3>
             {project.client && <p className="mt-1 text-sm text-muted">{project.client}</p>}
           </div>
           {project.year && <span className="eyebrow shrink-0 pt-1.5">{project.year}</span>}
         </header>
 
-        <p className="mt-4 text-[15px] leading-relaxed text-fg">{project.description}</p>
+        <p className="mt-3 line-clamp-3 text-[15px] leading-relaxed text-fg md:mt-4 md:line-clamp-none">{project.description}</p>
 
-        <ul className="mt-5 flex flex-wrap gap-1.5" aria-label={labels.stack}>
+        <ul className="mt-4 flex flex-wrap gap-1.5 md:mt-5 [&>li:nth-child(n+5)]:hidden md:[&>li:nth-child(n+5)]:inline-flex" aria-label={labels.stack}>
           {project.stack.map((tech) => (
             <li key={tech} className="chip">
               {tech}
             </li>
           ))}
+          {project.stack.length > 4 && (
+            <li aria-hidden className="chip !inline-flex md:!hidden">
+              +{project.stack.length - 4}
+            </li>
+          )}
         </ul>
 
-        <footer className="mt-auto flex flex-wrap items-center gap-x-5 gap-y-2 pt-6 text-sm">
+        <footer className="mt-auto flex flex-wrap items-center gap-x-5 gap-y-2 pt-5 text-sm md:pt-6">
           {project.url && (
             <ExternalLink href={project.url} className="link-underline font-medium" srHint={a11y.externalLink}>
               {labels.view}
@@ -118,7 +123,7 @@ export default function ProjectCard({ project, labels, a11y }: ProjectCardProps)
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className="relative max-h-[88vh] w-full max-w-2xl overflow-y-auto rounded-t-2xl border border-line bg-bg p-6 shadow-2xl sm:m-6 sm:rounded-2xl md:p-8"
+            className="relative max-h-[88dvh] w-full max-w-2xl overflow-y-auto rounded-t-2xl border border-line bg-bg p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-2xl sm:m-6 sm:rounded-2xl md:p-8"
           >
             <div className="flex items-start justify-between gap-6">
               <div>

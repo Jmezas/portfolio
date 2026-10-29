@@ -6,7 +6,7 @@ export default function Skills({ site, number }: { site: SiteConfig; number: str
   const { labels } = site;
 
   return (
-    <section id="skills" className="container-narrow scroll-mt-20 py-16 md:py-24">
+    <section id="skills" className="container-narrow scroll-mt-20 py-12 md:py-24">
       <SectionHeading number={number} title={labels.skills.title} intro={labels.skills.intro} />
 
       <dl className="divide-y divide-line border-y border-line">
