@@ -645,3 +645,19 @@ a:hover > .wiggle-icon,
 button:hover > .wiggle-icon {
   transform: rotate(-12deg) scale(1.1);
 }
+
+/* ---------- Portada generada para proyectos sin captura ---------- */
+
+.project-cover {
+  position: relative;
+  background: linear-gradient(135deg, var(--elev), var(--bg));
+}
+
+.project-cover-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--line) 1.3px, transparent 1.3px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(ellipse 90% 80% at 70% 20%, #000 10%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 70% 20%, #000 10%, transparent 75%);
+}

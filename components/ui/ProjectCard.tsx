@@ -36,7 +36,7 @@ export default function ProjectCard({ project, labels, a11y }: ProjectCardProps)
   return (
     <>
       <article className="project-card flex w-full flex-col overflow-hidden rounded-xl border border-line bg-elev hover:border-accent">
-        {project.image && (
+        {project.image ? (
           <div className="project-image">
             <Image
               src={project.image}
@@ -45,6 +45,21 @@ export default function ProjectCard({ project, labels, a11y }: ProjectCardProps)
               height={750}
               sizes="(min-width: 768px) 50vw, 100vw"
             />
+          </div>
+        ) : (
+          <div className="project-image project-cover" aria-hidden>
+            <div className="project-cover-grid" />
+            <div className="relative flex h-full flex-col items-start justify-end p-6 md:p-7">
+              <span className="mb-3 h-px w-10 bg-accent" />
+              <p className="font-serif text-3xl italic leading-tight tracking-tight md:text-4xl">
+                {project.stack.slice(0, 3).join(' · ')}
+              </p>
+              {project.stack.length > 3 && (
+                <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
+                  {project.stack.slice(3).join(' · ')}
+                </p>
+              )}
+            </div>
           </div>
         )}
         <div className="flex flex-1 flex-col p-6 md:p-7">
