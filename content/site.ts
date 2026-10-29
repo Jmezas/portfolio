@@ -256,6 +256,72 @@ export const site: SiteConfig = {
       },
     },
     {
+      id: 'sistema-cbp',
+      title: 'Sistema CBP · Colegio de Biólogos',
+      client: 'Colegio de Biólogos del Perú',
+      year: '2026',
+      description:
+        'Sistema web de trámites del Colegio de Biólogos del Perú: pre-registro y colegiatura por pasos, paneles por rol, documentos, pagos y un buscador público para verificar la habilidad de un colegiado.',
+      stack: ['Angular', 'NestJS', 'TypeORM', 'JWT', 'AWS S3', 'Google APIs', 'PDF', 'Excel'],
+      image: '/projects/sistema-cbp.jpg',
+      url: 'https://tramites.cbperu.org.pe',
+      details: {
+        context:
+          'Postulantes y colegiados tramitaban su incorporación y verificaban habilidades por canales separados. El Colegio necesitaba un solo sistema con validaciones, documentos y consulta pública.',
+        highlights: [
+          'Pre-registro en tres pasos y colegiatura por etapas: datos personales, educación y calificación profesional, con avance visible en el panel.',
+          'Paneles por rol: el administrador ve indicadores, pendientes y registros; el postulante ve su progreso y descarga su ficha en PDF.',
+          'Buscador público por N° de colegiatura, DNI o nombre, con datos enmascarados según la Ley 29733 y verificación anti-bot.',
+          'Documentos en AWS S3, correos con nodemailer y exportación a Excel para el equipo administrativo.',
+        ],
+      },
+    },
+    {
+      id: 'palace-hotel',
+      title: 'Palace Hotel · Sistema PMS',
+      client: 'Palace Hotel',
+      year: '2026',
+      description:
+        'Sistema de gestión hotelera (PMS) multi-empresa: tablero de habitaciones, recepción, limpieza, mantenimiento, facturación y reportes de ocupación, sobre microservicios NestJS y un panel en Angular.',
+      stack: ['Angular', 'NestJS', 'TypeORM', 'PostgreSQL', 'Redis', 'BullMQ', 'JWT', 'AWS S3', 'Firebase'],
+      image: '/projects/palace-hotel.jpg',
+      details: {
+        context:
+          'Un hotel necesita ver en tiempo real qué habitación está libre, sucia u ocupada, y coordinar recepción, limpieza y facturación desde el mismo sistema, con varias empresas en una sola instalación.',
+        highlights: [
+          'Tablero de habitaciones por piso con estado operativo y de limpieza, y alta de huéspedes sin reserva (walk-in).',
+          'Panel de inicio con ocupación, llegadas, salidas y huéspedes en casa, calculados desde el API.',
+          'Arquitectura de microservicios: IAM, PMS, facturación, notificaciones y gateway, con colas BullMQ.',
+          'Acceso por roles y menús configurables, con gestión de usuarios y cambio de contraseña.',
+        ],
+      },
+    },
+    {
+      id: 'facturacion-electronica',
+      title: 'GroupFac · API de facturación electrónica',
+      client: 'GroupFac',
+      year: '2026',
+      description:
+        'API multi-empresa para emitir comprobantes electrónicos ante SUNAT: facturas, boletas, notas de crédito y débito, guías de remisión, retenciones, percepciones, resumen diario y bajas. Portal con documentación interactiva y ejemplos listos para copiar.',
+      stack: ['.NET 8', 'C#', 'DDD', 'CQRS', 'MediatR', 'FluentValidation', 'EF Core', 'PostgreSQL', 'SOAP SUNAT', 'QuestPDF', 'Cloudflare R2', 'Docker', 'nginx', 'React', 'TypeScript'],
+      image: '/projects/groupfac.jpg',
+      details: {
+        context:
+          'Cada empresa registra su RUC, certificado digital y clave SOL, recibe un token y emite primero en el ambiente beta de SUNAT. Al pasar a producción, el token, los correlativos y el código de la integración no cambian.',
+        role: 'Arquitectura y desarrollo del backend, integración SOAP con SUNAT, portal de documentación en React y despliegue con Docker.',
+        highlights: [
+          'Arquitectura DDD por contexto (Company, ElectronicDocument, Shared), cada uno con capas Application, Domain, Infrastructure e Interface.',
+          'CQRS con MediatR: un comando por caso de uso (CreateInvoice, CreateCreditNote, CreateDispatchGuide, VoidDocument, RetryDocument) y queries separadas.',
+          'Validación con FluentValidation inyectada como pipeline behavior: ninguna petición llega al handler sin validarse.',
+          'Emisión idempotente al estilo OSE: el documento se guarda PENDING antes de enviarse, los reintentos reutilizan el registro y un correlativo ya aceptado devuelve 409.',
+          'Autenticación por token de empresa en middleware, con contexto de empresa por petición; manejo de errores y logging de peticiones centralizados.',
+          'Firma XML con el certificado de cada empresa, envío SOAP a SUNAT (facturas, resúmenes y guías), CDR almacenado y PDF con QR generado con QuestPDF.',
+          'Archivos en Cloudflare R2 vía API compatible con S3; despliegue Docker multi-stage en Alpine con nginx como único punto de entrada.',
+          'Swagger con esquema de seguridad, endpoint de salud de los servicios SUNAT y respuestas compatibles con Nubefact para migrar integraciones.',
+        ],
+      },
+    },
+    {
       id: 'kippu',
       title: 'Kippu · Gestión de condominios',
       client: 'Kippu',
